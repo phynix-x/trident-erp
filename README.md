@@ -1,67 +1,26 @@
-# ZenGhunt — Smart price intelligence
+# Rental Mediator ERP
 
-ZenGhunt is a GitHub Pages frontend backed by Supabase, with a server-side collection pipeline designed for real multi-store price comparison.
+This branch changes the ZenGhunt website frontend into a first-stage Rental Mediator ERP prototype.
 
-## Architecture
+## What is included
+- Responsive project-control dashboard and staff navigation.
+- Customer and vendor master records, machine records, projects, monthly customer invoices, vendor bills, payments, document references and follow-ups.
+- One Project ID linking project records.
+- Project closure checklist requiring machine return, commercial settlement, document completion and reconciliation.
+- Browser JSON backup export.
 
-`Store/API feeds → connector manager → normalized offers → product matcher → Supabase → price history → ZenGhunt frontend`
+## Important current limitation
+The current prototype saves records in the browser's localStorage. That means data is local to that browser/device and is not shared with other staff. It is not production-ready for real customer, tax, bank or confidential data. It currently does not authenticate staff, upload files, or connect the screens to Supabase.
 
-The collector supports direct/approved sources for Amazon, Flipkart, Myntra, AJIO, Meesho, Tata CLiQ, Croma and Reliance Digital, plus a generic JSON/CSV/XML/TXT product-feed adapter for approved affiliate networks. This lets one affiliate-network feed cover multiple merchants instead of requiring one custom API per store. ZenGhunt never fabricates prices, links or price-history points.
+## Supabase schema blueprint
+`supabase/rental_erp_schema.sql` is a database schema draft for review and test deployment. It is not automatically applied to the existing Supabase project. Review policies and accounting requirements, test in a separate project, then apply deliberately. Do not place the service-role key in browser code.
 
-## Current website
+## Next implementation steps
+1. Confirm the screens and fields against the existing master workbook and agreed workflow.
+2. Test the schema in a separate Supabase project; add staff authentication, roles, audit history and private document storage.
+3. Connect the UI to Supabase using the publishable key and authenticated sessions.
+4. Migrate existing source data with a backup and a reconciliation report; keep ambiguous historical values marked Verify/Pending.
+5. Test one complete project end-to-end before moving the production website to this branch.
 
-- GitHub Pages-compatible frontend
-- Supabase REST read layer using the publishable browser key
-- Product cards use actual Supabase listings and prices
-- Store comparison uses the real listing URL stored for each offer
-- Product pages calculate current, previous recorded, lowest and average prices from recorded history
-- Price-history charts use only collected history
-- Responsive image containment and mobile offer-table scrolling
-
-## Collector
-
-Run locally with:
-
-```bash
-SUPABASE_URL="..." SUPABASE_SERVICE_ROLE_KEY="..." python -m collector.main
-```
-
-GitHub Actions runs the collector every 6 hours and can also be started manually. A separate daily keepalive workflow makes a real read-only Supabase request so the Free project continues receiving activity. The workflow reads the Supabase service-role key and store feed credentials from GitHub Actions secrets; these credentials must never be placed in `assets/config.js` or any browser code.
-
-### Feed contract
-
-Each configured JSON feed should return either an array or `{ "products": [...] }`. Each product should provide:
-
-- `id` or `store_product_id`
-- `title` or `name`
-- `price` or `current_price`
-- `url` or `product_url`
-- optional `mrp`, `image_url`, `brand`, `category`, `model_number`, `global_product_id`, `currency`, `availability`, offer/coupon fields
-
-### GitHub Actions secrets
-
-Required:
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
-
-Optional direct store feeds:
-- `ZENGHUNT_FEED_AMAZON_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_FLIPKART_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_MYNTRA_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_AJIO_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_MEESHO_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_TATACLIQ_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_CROMA_URL` / `_TOKEN`
-- `ZENGHUNT_FEED_RELIANCEDIGITAL_URL` / `_TOKEN`
-- `FLIPKART_AFFILIATE_ID` / `FLIPKART_AFFILIATE_TOKEN` / `FLIPKART_AFFILIATE_QUERIES`
-- `ZENGHUNT_FEEDS_JSON` — JSON array of approved affiliate-network feeds. Each entry can specify `slug`, `name`, `url`, optional `token`, and `format` (`json`, `csv`, `xml`, or `auto`).
-
-If no approved feed is configured, the collector exits without inserting data. This is intentional: empty real data is better than fake data.
-
-## Security
-
-The browser uses only the Supabase publishable key. Never commit a Supabase service-role key, database password, private API token or other secret.
-
-## Deploy
-
-The site is designed for GitHub Pages from the repository root. Enable Pages for the `main` branch and `/ (root)` if it is not already enabled.
+## Existing project
+This is a separate branch named `rental-erp-rebuild`. The `main` branch has not been changed by this conversion, so the current ZenGhunt site remains intact until a reviewed deployment is explicitly made.

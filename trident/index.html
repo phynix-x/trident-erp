@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Trident — equipment rental solutions for access, lifting and material handling.">
+  <title>Trident | Equipment Rental</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Trident home"><span class="brand-mark">T<span>✣</span>T</span><span><b>TRIDENT</b><small>Partners in Progress</small></span></a>
+      <nav id="nav" class="nav">
+        <a href="#home">Home</a>
+        <a href="#equipment">Equipment</a>
+        <a href="#industries">Industries</a>
+        <a href="#locations">Locations</a>
+        <a href="#about">About Us</a>
+        <a href="#resources">Resources</a>
+        <button class="btn btn-primary" data-quote>Get a Quote</button>
+      </nav>
+      <button id="menuBtn" class="menu-btn" aria-label="Open menu">☰</button>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">EQUIPMENT RENTAL SOLUTIONS</p>
+          <h1>Elevating Projects.<br><span>Empowering Growth.</span></h1>
+          <p class="lead">Reliable access, lifting and material-handling equipment for construction, infrastructure, industrial and commercial projects.</p>
+          <div class="actions"><a class="btn btn-primary" href="#equipment">Explore Equipment</a><button class="btn btn-outline" data-quote>Request a Quote</button></div>
+          <div class="hero-stats"><div><strong>10+</strong><span>Equipment Types</span></div><div><strong>51</strong><span>Listed Fleet Units</span></div><div><strong>24/7</strong><span>Enquiry Support</span></div></div>
+        </div>
+        <div class="hero-art"><div class="machine-card"><div class="machine-icon">↗</div><b>Access & Lifting</b><span>Professional aerial access solutions</span></div><div class="machine-card offset"><div class="machine-icon">⇧</div><b>Material Handling</b><span>Reliable lifting and warehouse solutions</span></div></div>
+      </section>
+
+      <section class="section finder">
+        <div><p class="eyebrow">FIND YOUR EQUIPMENT</p><h2>What do you need for your project?</h2></div>
+        <div class="finder-box"><input id="searchInput" placeholder="Search equipment, capacity or model..." aria-label="Search equipment"><select id="categoryFilter"><option value="all">All active categories</option><option value="access">Access & Lifting</option><option value="material">Material Handling</option></select><button class="btn btn-primary" id="searchBtn">Search</button></div>
+      </section>
+
+      <section id="equipment" class="section">
+        <div class="section-head"><div><p class="eyebrow">OUR FLEET</p><h2>Equipment for every working height</h2><p>Current online catalogue. Availability is subject to prior confirmation.</p></div><a href="#equipment" class="text-link">View all →</a></div>
+        <div id="equipmentGrid" class="equipment-grid"></div>
+        <div class="coming-grid"><article class="coming-card"><span>COMING SOON</span><h3>Power & Support Equipment</h3><p>Generators, air compressors, tower lights and welding equipment will be added to the active catalogue soon.</p></article><article class="coming-card"><span>COMING SOON</span><h3>Earth Moving & Mining Equipment</h3><p>Excavators, crushers, tippers and wheel loaders are planned for a future catalogue expansion.</p></article></div>
+      </section>
+
+      <section id="industries" class="section dark-section"><p class="eyebrow">INDUSTRIES WE SERVE</p><h2>Equipment that works where your project works.</h2><div class="industry-grid"><article>Construction & Infrastructure</article><article>Industrial Maintenance</article><article>Manufacturing</article><article>Warehousing & Logistics</article><article>Commercial Buildings</article><article>Telecom & Utilities</article></div></section>
+
+      <section id="locations" class="section split"><div><p class="eyebrow">LOCATION NETWORK</p><h2>Project support starts close to your site.</h2><p>Tell us your project location and requirement. Our team can confirm suitable equipment and deployment options.</p><button class="btn btn-primary" data-quote>Check Availability</button></div><div class="location-card"><div class="pin">●</div><h3>Delhi NCR</h3><p>Corporate office & rental coordination</p><b>Noida, Uttar Pradesh</b><small>Unit 603–604, 6th Floor, Tower B, Bhutani Alphathum, Sector 90</small></div></section>
+
+      <section id="about" class="section about"><div><p class="eyebrow">ABOUT TRIDENT</p><h2>Partners in Progress.</h2><p>Trident Trinity Assets Private Limited provides equipment rental solutions designed around project requirements, access needs and operational timelines.</p></div><div class="principles"><div><b>01</b><span>Safety-first operations</span></div><div><b>02</b><span>Equipment matched to the job</span></div><div><b>03</b><span>Responsive project support</span></div></div></section>
+
+      <section id="resources" class="section resources"><div class="section-head"><div><p class="eyebrow">RESOURCES</p><h2>Knowledge & project resources</h2></div></div><div class="resource-grid"><article><span>GUIDE</span><h3>Choosing the right aerial work platform</h3><p>Understand working height, outreach, capacity and site conditions.</p><a href="#" class="text-link">Read more →</a></article><article><span>FAQ</span><h3>Equipment rental checklist</h3><p>Key details to provide when requesting a rental quotation.</p><a href="#" class="text-link">Read more →</a></article><article><span>COMING SOON</span><h3>Trident project case studies</h3><p>Real-world applications and deployment stories will appear here.</p></article></div></section>
+
+      <section class="cta"><div><p class="eyebrow">HAVE A PROJECT?</p><h2>Let's find the right equipment.</h2><p>Share your equipment requirement, location and rental duration.</p></div><button class="btn btn-light" data-quote>Request a Quote</button></section>
+    </main>
+
+    <footer class="footer"><div><div class="footer-brand">TRIDENT</div><p>Trident Trinity Assets Private Limited</p><p>Partners in Progress</p></div><div><b>Equipment</b><a href="#equipment">Access & Lifting</a><a href="#equipment">Material Handling</a><a href="#equipment">Coming Soon</a></div><div><b>Contact</b><span>+91 89535 65889</span><span>+91 81271 64869</span><span>sales@tridenttrinity.com</span><span>Noida, Uttar Pradesh</span></div><div><b>Quick Links</b><a href="#about">About Us</a><a href="#locations">Locations</a><a href="#resources">Resources</a><button data-quote>Get a Quote</button></div><div class="copyright">© 2026 Trident Trinity Assets Private Limited. Educational prototype.</div></footer>
+  </div>
+
+  <div id="quoteModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="close" data-close>×</button><p class="eyebrow">TRIDENT ENQUIRY</p><h2>Request a Quote</h2><form id="quoteForm"><label>Name<input name="name" required></label><label>Company<input name="company"></label><label>Mobile<input name="phone" required></label><label>Email<input type="email" name="email"></label><label>Equipment<select name="equipment" id="quoteEquipment"></select></label><label>Project Location<input name="location" required></label><div class="form-row"><label>Start Date<input type="date" name="start_date"></label><label>Duration<input name="duration" placeholder="e.g. 15 days"></label></div><label>Requirement<textarea name="message" rows="4"></textarea></label><button class="btn btn-primary" type="submit">Submit Enquiry</button><p id="formMessage" class="form-message"></p></form></div></div>
+
+  <div id="detailModal" class="modal" aria-hidden="true"><div class="modal-card detail"><button class="close" data-close>×</button><div id="detailContent"></div></div></div>
+  <script src="./app.js"></script>
+</body>
+</html>

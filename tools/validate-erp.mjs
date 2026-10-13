@@ -12,6 +12,7 @@ const required = [
   'assets/erp.js',
   'supabase/rental_erp_schema.sql',
   'supabase/rental_erp_security_hardening.sql',
+  'supabase/rental_erp_payment_allocation_checks.sql',
   'tools/setup-and-test.md'
 ];
 const errors = [];
@@ -27,6 +28,7 @@ const html = readFileSync('index.html', 'utf8');
 const app = readFileSync('assets/erp.js', 'utf8');
 const sql = readFileSync('supabase/rental_erp_schema.sql', 'utf8');
 const securitySql = readFileSync('supabase/rental_erp_security_hardening.sql', 'utf8');
+const allocationSql = readFileSync('supabase/rental_erp_payment_allocation_checks.sql', 'utf8');
 const readme = readFileSync('README.md', 'utf8');
 
 for (const [label, condition] of [
@@ -41,6 +43,8 @@ for (const [label, condition] of [
   ['ERP access requires active staff profile', /p\.is_active = true/.test(sql) && /active staff access/.test(sql)],
   ['Private document bucket configured', /rental-erp-documents/.test(securitySql) && /public\)\s*values\s*\('rental-erp-documents',[\s\S]*?false/i.test(securitySql)],
   ['ERP audit log and row-change triggers drafted', /erp_audit_log/.test(securitySql) && /erp_audit_row_change/.test(securitySql)],
+  ['Payment allocation validates project and side', /must belong to the same Project ID/.test(allocationSql) && /Only customer receipts/.test(allocationSql) && /Only vendor payments/.test(allocationSql)],
+  ['Payment allocation cannot exceed payment amount', /Total allocations cannot exceed the payment amount/.test(allocationSql)],
   ['Prototype limitation disclosed', /localStorage/i.test(readme) && /not production-ready/i.test(readme)],
   ['App uses prototype-local storage (not silently presented as shared database)', /localStorage/.test(app)]
 ]) {

@@ -1,0 +1,33 @@
+name: ERP prototype preflight
+
+on:
+  push:
+    branches:
+      - rental-erp-rebuild
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+      - 'assets/erp.css'
+      - 'assets/erp.js'
+      - 'supabase/**'
+      - 'tools/**'
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate ERP prototype files and safeguards
+        run: node tools/validate-erp.mjs

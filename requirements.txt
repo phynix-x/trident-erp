@@ -1,1 +1,0 @@
-# ZenGhunt collector uses only Python standard library today.

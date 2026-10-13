@@ -104,9 +104,26 @@ create table if not exists public.erp_po_revisions (
   unique(project_id, side, revision_number)
 );
 
--- Authenticated staff may work within this single-company workspace.
--- For multi-company tenancy, replace these policies with tenant-scoped policies before production.
-do $$
+-- Staff must be explicitly provisioned in this single-company workspace.
+-- This schema is still a draft: table-specific role permissions and tenant isolation
+-- must be reviewed before production. Do not use the service-role key in a browser.
+create table if not exists public.erp_staff_profiles (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  display_name text not null,
+  role text not null check (role in ('admin','manager','accounts','operations','viewer')),
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.erp_staff_profiles enable row level security;
+drop policy if exists "staff can read own profile" on public.erp_staff_profiles;
+create policy "staff can read own profile" on public.erp_staff_profiles
+  for select to authenticated using (user_id = auth.uid());
+
+-- Only explicitly provisioned, active staff can access ERP tables.
+-- Current draft grants active staff broad access; implement role-specific policies
+-- before production (for example, viewers must not insert/update/delete financial data).
+do $
 declare t text;
 begin
   foreach t in array array['erp_customers','erp_vendors','erp_sites','erp_machines','erp_projects',
@@ -115,9 +132,32 @@ begin
   loop
     execute format('alter table public.%I enable row level security', t);
     execute format('drop policy if exists "authenticated staff full access" on public.%I', t);
-    execute format('create policy "authenticated staff full access" on public.%I for all to authenticated using (true) with check (true)', t);
+    execute format('drop policy if exists "active staff access" on public.%I', t);
+    execute format(
+      'create policy "active staff access" on public.%I for all to authenticated using (exists (select 1 from public.erp_staff_profiles p where p.user_id = auth.uid() and p.is_active = true)) with check (exists (select 1 from public.erp_staff_profiles p where p.user_id = auth.uid() and p.is_active = true))',
+      t
+    );
   end loop;
-end $$;
+end $;
+
+-- Consistent updated_at timestamps for mutable master/project records.
+create or replace function public.erp_set_updated_at()
+returns trigger language plpgsql set search_path = public
+as $
+begin
+  new.updated_at = now();
+  return new;
+end;
+$;
+do $
+declare t text;
+begin
+  foreach t in array array['erp_customers','erp_vendors','erp_projects','erp_staff_profiles']
+  loop
+    execute format('drop trigger if exists set_updated_at on public.%I', t);
+    execute format('create trigger set_updated_at before update on public.%I for each row execute function public.erp_set_updated_at()', t);
+  end loop;
+end $;
 
 create index if not exists idx_erp_projects_customer on public.erp_projects(customer_id);
 create index if not exists idx_erp_projects_vendor on public.erp_projects(vendor_id);

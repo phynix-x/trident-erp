@@ -73,6 +73,52 @@ for each row execute function public.erp_validate_invoice_allocation();
 
 -- A payment can allocate to either a customer invoice or a vendor bill, never both.
 -- The table's existing check constraint enforces exactly one target per allocation.
+-- Prevent later edits to a payment from invalidating its existing allocations.
+create or replace function public.erp_validate_payment_update_against_allocations()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog, public
+as $
+declare
+  allocated_total numeric(14,2);
+  invalid_target_count integer;
+begin
+  select coalesce(sum(a.allocated_amount), 0)
+    into allocated_total
+  from public.erp_invoice_allocations a
+  where a.payment_id = new.id;
+
+  if allocated_total > new.amount then
+    raise exception 'Payment amount cannot be reduced below its allocated total';
+  end if;
+
+  select count(*)
+    into invalid_target_count
+  from public.erp_invoice_allocations a
+  left join public.erp_customer_invoices ci on ci.id = a.customer_invoice_id
+  left join public.erp_vendor_bills vb on vb.id = a.vendor_bill_id
+  where a.payment_id = new.id
+    and (
+      (a.customer_invoice_id is not null and (new.side <> 'customer' or ci.project_id is distinct from new.project_id))
+      or
+      (a.vendor_bill_id is not null and (new.side <> 'vendor' or vb.project_id is distinct from new.project_id))
+    );
+
+  if invalid_target_count > 0 then
+    raise exception 'Payment side/project cannot change while incompatible allocations exist';
+  end if;
+
+  return new;
+end;
+$;
+revoke all on function public.erp_validate_payment_update_against_allocations() from public;
+
+drop trigger if exists erp_validate_payment_update_against_allocations on public.erp_payments;
+create trigger erp_validate_payment_update_against_allocations
+before update of amount, side, project_id on public.erp_payments
+for each row execute function public.erp_validate_payment_update_against_allocations();
+
 commit;
 
 -- Test cases to run in the dedicated test project:

@@ -35,6 +35,8 @@ for (const [label, condition] of [
   ['Vendor bill table exists', /create table if not exists public\.erp_vendor_bills/.test(sql)],
   ['Payment allocation table exists', /create table if not exists public\.erp_invoice_allocations/.test(sql)],
   ['PO revision history table exists', /create table if not exists public\.erp_po_revisions/.test(sql)],
+  ['Staff provisioning profile exists', /create table if not exists public\.erp_staff_profiles/.test(sql)],
+  ['ERP access requires active staff profile', /p\.is_active = true/.test(sql) && /active staff access/.test(sql)],
   ['Prototype limitation disclosed', /localStorage/i.test(readme) && /not production-ready/i.test(readme)],
   ['App uses prototype-local storage (not silently presented as shared database)', /localStorage/.test(app)]
 ]) {

@@ -45,6 +45,7 @@ for (const [label, condition] of [
   ['ERP audit log and row-change triggers drafted', /erp_audit_log/.test(securitySql) && /erp_audit_row_change/.test(securitySql)],
   ['Payment allocation validates project and side', /must belong to the same Project ID/.test(allocationSql) && /Only customer receipts/.test(allocationSql) && /Only vendor payments/.test(allocationSql)],
   ['Payment allocation cannot exceed payment amount', /Total allocations cannot exceed the payment amount/.test(allocationSql)],
+  ['Editing payment cannot invalidate allocations', /Payment amount cannot be reduced below its allocated total/.test(allocationSql) && /erp_validate_payment_update_against_allocations/.test(allocationSql)],
   ['Prototype limitation disclosed', /localStorage/i.test(readme) && /not production-ready/i.test(readme)],
   ['App uses prototype-local storage (not silently presented as shared database)', /localStorage/.test(app)]
 ]) {

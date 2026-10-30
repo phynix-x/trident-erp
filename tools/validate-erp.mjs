@@ -5,6 +5,7 @@
  * This does not replace browser, database, permissions, migration or accounting tests.
  */
 import { readFileSync, existsSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 const required = [
   'index.html',
@@ -23,6 +24,15 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
+
+const jsSyntax = spawnSync(process.execPath, ['--check', 'assets/erp.js'], { encoding: 'utf8' });
+if (jsSyntax.status !== 0) {
+  console.error('FAIL: ERP JavaScript syntax check');
+  if (jsSyntax.stdout) console.error(jsSyntax.stdout.trim());
+  if (jsSyntax.stderr) console.error(jsSyntax.stderr.trim());
+  process.exit(1);
+}
+console.log('PASS: ERP JavaScript syntax check');
 
 const html = readFileSync('index.html', 'utf8');
 const app = readFileSync('assets/erp.js', 'utf8');

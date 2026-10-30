@@ -24,3 +24,4 @@ The current prototype saves records in the browser's localStorage. That means da
 
 ## Existing project
 This is a separate branch named `rental-erp-rebuild`. The `main` branch has not been changed by this conversion, so the current ZenGhunt site remains intact until a reviewed deployment is explicitly made.
+Cloudflare preview deployment test

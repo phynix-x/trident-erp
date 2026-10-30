@@ -79,7 +79,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = pg_catalog, public
-as $
+as $$
 declare
   allocated_total numeric(14,2);
   invalid_target_count integer;
@@ -111,7 +111,7 @@ begin
 
   return new;
 end;
-$;
+$$;
 revoke all on function public.erp_validate_payment_update_against_allocations() from public;
 
 drop trigger if exists erp_validate_payment_update_against_allocations on public.erp_payments;

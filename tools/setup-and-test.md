@@ -1,6 +1,6 @@
 # Rental Mediator ERP — Development Tool Setup
 
-This guide is for the `rental-erp-rebuild` branch. The production `main` branch is not changed by this guide.
+This guide applies to the Trident ERP repository. Development changes should be reviewed in a feature branch and pull request before production deployment.
 
 ## Use now
 - **VS Code**: edit and review application files.
@@ -24,8 +24,15 @@ This guide is for the `rental-erp-rebuild` branch. The production `main` branch 
 4. Keep ambiguous historic amounts, invoice allocations and missing documents marked `Verify/Pending`; do not invent values.
 5. Do not merge the draft pull request or replace the live site until database, staff access, document permissions, migration and end-to-end tests pass.
 
-## Current project status
-The ERP UI is a prototype and currently stores records in browser localStorage. It is not multi-user, is not connected to Supabase, and should not contain real confidential financial data. The SQL file in `supabase/rental_erp_schema.sql` is a draft only; it has not been applied to a database.
+## Current project status (verified 2026-10-31)
+- The browser app authenticates with Supabase and the ERP JavaScript loads/saves records through Supabase; localStorage is used as a browser cache, not as the shared source of truth in live mode.
+- The production Supabase project has the ERP schema, staff profiles, RLS, audit history, and a private document bucket from earlier approved setup. Do not assume every end-to-end workflow has been browser-tested.
+- A separate **test** Supabase project is being used for role-policy and workflow validation. It has role-specific RLS policies, private document storage policies, payment function execution restrictions, and the `erp_activity_log` deletion-audit foundation.
+- The test project currently has no provisioned staff profiles/test logins. Follow [First Admin Bootstrap](first-admin-bootstrap.md) before role testing.
+- The test project's security advisor returned zero findings after the latest changes. Performance findings are INFO-level unused-index notices on an empty test database; no role-policy initplan or multiple-permissive-policy warning remained in the last check.
+- No production migration for the test-only payment-allocation validation SQL has been applied. Do not apply it to production until tested separately.
+- `supabase/rental_erp_schema.sql` is a blueprint/reference, not proof that production schema is created from that file.
+- Do not use real confidential business data in the test project. Do not touch the separate Trident website or its equipment tables.
 
 ## Test checklist once backend is available
 - Sign in as staff and verify access is restricted.

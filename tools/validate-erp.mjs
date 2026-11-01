@@ -45,7 +45,7 @@ for (const [label, condition] of [
   ['HTML loads ERP CSS', html.includes('assets/erp.css')],
   ['HTML loads ERP JS', html.includes('assets/erp.js')],
   ['Production Supabase endpoint configured', html.includes('https://bztvvonpexothabbqjqy.supabase.co') && !html.includes('eaetmavhgljqbcjugtuh')],
-  ['Verified staff profile passed into ERP UI', /erpConnect\\(sb,p\\)/.test(html)],
+  ['Verified staff profile passed into ERP UI', /erpConnect\(sb,p\)/.test(html)],
   ['Site master is wired to Supabase', /erp_sites/.test(app) && /type==='sites'/.test(app)],
   ['Project closure gate exists', /machine_returned/.test(sql) && /commercial_settled/.test(sql) && /documents_complete/.test(sql) && /reconciled/.test(sql)],
   ['Customer invoice table exists', /create table if not exists public\.erp_customer_invoices/.test(sql)],

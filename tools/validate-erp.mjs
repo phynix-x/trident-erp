@@ -13,6 +13,7 @@ const required = [
   'assets/erp.js',
   'supabase/rental_erp_schema.sql',
   'supabase/rental_erp_security_hardening.sql',
+  'supabase/rental_erp_test_rls_fix.sql',
   'supabase/rental_erp_payment_allocation_checks.sql',
   'tools/setup-and-test.md'
 ];
@@ -38,6 +39,7 @@ const html = readFileSync('index.html', 'utf8');
 const app = readFileSync('assets/erp.js', 'utf8');
 const sql = readFileSync('supabase/rental_erp_schema.sql', 'utf8');
 const securitySql = readFileSync('supabase/rental_erp_security_hardening.sql', 'utf8');
+const rlsFixSql = readFileSync('supabase/rental_erp_test_rls_fix.sql', 'utf8');
 const allocationSql = readFileSync('supabase/rental_erp_payment_allocation_checks.sql', 'utf8');
 const readme = readFileSync('README.md', 'utf8');
 
@@ -53,6 +55,9 @@ for (const [label, condition] of [
   ['ERP access requires active staff profile', /p\.is_active = true/.test(sql) && /active staff access/.test(sql)],
   ['Private document bucket configured', /rental-erp-documents/.test(securitySql) && /public\)\s*values\s*\('rental-erp-documents',[\s\S]*?false/i.test(securitySql)],
   ['ERP audit log and row-change triggers drafted', /erp_audit_log/.test(securitySql) && /erp_audit_row_change/.test(securitySql)],
+  ['RLS recursion fix is versioned', /private\.erp_current_staff_role/.test(rlsFixSql) && /security definer/i.test(rlsFixSql) && /erp_staff_profiles/.test(rlsFixSql)],
+  ['Verified staff role reaches the UI', /erpConnect\(sb,p\)/.test(html)],
+  ['Archive UI is role-aware and compensates for audit failure', /function canArchive/.test(app) && /Archive cancelled because its Dump entry could not be saved/.test(app)],
   ['Payment allocation validates project and side', /must belong to the same Project ID/.test(allocationSql) && /Only customer receipts/.test(allocationSql) && /Only vendor payments/.test(allocationSql)],
   ['Payment allocation cannot exceed payment amount', /Total allocations cannot exceed the payment amount/.test(allocationSql)],
   ['Editing payment cannot invalidate allocations', /Payment amount cannot be reduced below its allocated total/.test(allocationSql) && /erp_validate_payment_update_against_allocations/.test(allocationSql)],

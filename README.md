@@ -9,8 +9,10 @@ This branch changes the ZenGhunt website frontend into a first-stage Rental Medi
 - Project closure checklist requiring machine return, commercial settlement, document completion and reconciliation.
 - Browser JSON backup export.
 
-## Important current limitation
-The current prototype saves records in the browser's localStorage. That means data is local to that browser/device and is not shared with other staff. It is not production-ready for real customer, tax, bank or confidential data. It currently does not authenticate staff, upload files, or connect the screens to Supabase.
+## Current test status
+This branch is connected only to the dedicated **Trident ERP Test** Supabase project. After an active staff member signs in, the master-data screens load and save through Supabase. The browser retains a `localStorage` fallback from the original prototype; it is not a shared source of truth and must not be used for real customer, tax, bank or confidential data.
+
+This is **not production-ready**. Test data only: role policies, document permissions, accounting controls, migration reconciliation and full end-to-end tests still require deliberate review.
 
 ## Supabase schema blueprint
 `supabase/rental_erp_schema.sql` is a database schema draft for review and test deployment. `supabase/rental_erp_security_hardening.sql` is a separate draft migration for a private document bucket and row-change audit trail. `supabase/rental_erp_payment_allocation_checks.sql` drafts database checks to prevent cross-project or wrong-side allocations and prevent allocations exceeding the recorded payment. It is not automatically applied to the existing Supabase project. It now requires an explicitly provisioned active staff profile for ERP table access, but active staff currently have broad access; role-specific permissions, private Storage policies, audit history and accounting safeguards still need implementation and review. Test in a separate project, then apply deliberately. Do not place the service-role key in browser code.
@@ -22,6 +24,5 @@ The current prototype saves records in the browser's localStorage. That means da
 4. Migrate existing source data with a backup and a reconciliation report; keep ambiguous historical values marked Verify/Pending.
 5. Test one complete project end-to-end before moving the production website to this branch.
 
-## Existing project
-This is a separate branch named `rental-erp-rebuild`. The `main` branch has not been changed by this conversion, so the current ZenGhunt site remains intact until a reviewed deployment is explicitly made.
-Cloudflare preview deployment test
+## Branch safety
+This work is isolated on `test/supabase-isolation` and the Test Supabase project. The `main` branch, production Supabase project, public website, Google Sheets and unrelated equipment systems are out of scope and must remain untouched.
